@@ -3,8 +3,8 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function PUT(request: Request, context: { params: { id: string } }) {
-    const { id } = context.params;
+export async function PUT(request: Request, { params }: { params: Record<string, string> }) {
+    const id = params.id;
 
     if (!id) {
         return NextResponse.json({ error: 'ID is required' }, { status: 400 });
@@ -39,8 +39,8 @@ export async function PUT(request: Request, context: { params: { id: string } })
     }
 }
 
-export async function DELETE(request: Request, context: { params: { id: string } }) {
-    const { id } = context.params;
+export async function DELETE(request: Request, { params }: { params: Record<string, string> }) {
+    const id = params.id;
 
     if (!id) {
         return NextResponse.json({ error: 'ID is required' }, { status: 400 });
