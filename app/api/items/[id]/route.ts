@@ -30,15 +30,12 @@ export async function PUT(
 ) {
     try {
         const { name, location } = await request.json()
-
         const item = await prisma.item.update({
             where: { id: params.id },
             data: { name, location },
         })
-
         return NextResponse.json(item)
-    } catch (error) {
-        console.error('Error updating item:', error)
+    } catch {
         return NextResponse.json(
             { error: 'Failed to update item' },
             { status: 500 }
@@ -47,17 +44,15 @@ export async function PUT(
 }
 
 export async function DELETE(
-    request: Request,
+    request: NextRequest,
     { params }: { params: { id: string } }
 ) {
     try {
         await prisma.item.delete({
             where: { id: params.id },
         })
-
         return new NextResponse(null, { status: 204 })
-    } catch (error) {
-        console.error('Error deleting item:', error)
+    } catch {
         return NextResponse.json(
             { error: 'Failed to delete item' },
             { status: 500 }
