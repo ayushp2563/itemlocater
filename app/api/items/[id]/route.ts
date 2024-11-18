@@ -1,66 +1,66 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+// import { NextResponse } from 'next/server'
+// import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient()
 
-export async function PUT(request: Request, { params }: { params: Record<string, string> }) {
-    const id = params.id;
+// export async function PUT(request: Request, { params }: { params: { id: string } }) {
+//     const { name, location } = await request.json()
+//     const item = await prisma.item.update({
+//         where: { id: params.id },
+//         data: { name, location },
+//     })
+//     return NextResponse.json(item)
+// }
 
-    if (!id) {
-        return NextResponse.json({ error: 'ID is required' }, { status: 400 });
-    }
+// export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+//     await prisma.item.delete({
+//         where: { id: params.id },
+//     })
+//     return new NextResponse(null, { status: 204 })
+// }
 
+import { NextResponse } from 'next/server'
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
+
+export async function PUT(
+    request: Request,
+    { params }: { params: { id: string } }
+) {
     try {
-        const { name, location } = await request.json();
-
-        if (!name || !location) {
-            return NextResponse.json(
-                { error: 'Both "name" and "location" are required fields' },
-                { status: 400 }
-            );
-        }
+        const { name, location } = await request.json()
 
         const item = await prisma.item.update({
-            where: { id },
+            where: { id: params.id },
             data: { name, location },
-        });
+        })
 
-        return NextResponse.json(item);
+        return NextResponse.json(item)
     } catch (error) {
-        console.error('Error updating item:', error);
-
-        if (error === 'P2025') {
-            return NextResponse.json({ error: 'Item not found' }, { status: 404 });
-        }
-
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-    } finally {
-        await prisma.$disconnect();
+        console.error('Error updating item:', error)
+        return NextResponse.json(
+            { error: 'Failed to update item' },
+            { status: 500 }
+        )
     }
 }
 
-export async function DELETE(request: Request, { params }: { params: Record<string, string> }) {
-    const id = params.id;
-
-    if (!id) {
-        return NextResponse.json({ error: 'ID is required' }, { status: 400 });
-    }
-
+export async function DELETE(
+    request: Request,
+    { params }: { params: { id: string } }
+) {
     try {
         await prisma.item.delete({
-            where: { id },
-        });
+            where: { id: params.id },
+        })
 
-        return new NextResponse(null, { status: 204 });
+        return new NextResponse(null, { status: 204 })
     } catch (error) {
-        console.error('Error deleting item:', error);
-
-        if (error === 'P2025') {
-            return NextResponse.json({ error: 'Item not found' }, { status: 404 });
-        }
-
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-    } finally {
-        await prisma.$disconnect();
+        console.error('Error deleting item:', error)
+        return NextResponse.json(
+            { error: 'Failed to delete item' },
+            { status: 500 }
+        )
     }
 }
