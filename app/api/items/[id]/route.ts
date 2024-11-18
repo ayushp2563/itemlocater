@@ -19,13 +19,13 @@
 //     return new NextResponse(null, { status: 204 })
 // }
 
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
 export async function PUT(
-    request: Request,
+    request: NextRequest,
     { params }: { params: { id: string } }
 ) {
     try {
