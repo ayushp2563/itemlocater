@@ -19,19 +19,21 @@
 //     return new NextResponse(null, { status: 204 })
 // }
 
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
+// In Next.js 15, route handlers use a different type signature
 export async function PUT(
-    request: NextRequest,
-    { params }: { params: { id: string } }
+    req: NextRequest,
+    context: { params: { id: string } }
 ) {
     try {
-        const { name, location } = await request.json()
+        const { name, location } = await req.json()
         const item = await prisma.item.update({
-            where: { id: params.id },
+            where: { id: context.params.id },
             data: { name, location },
         })
         return NextResponse.json(item)
@@ -44,12 +46,12 @@ export async function PUT(
 }
 
 export async function DELETE(
-    request: NextRequest,
-    { params }: { params: { id: string } }
+    req: NextRequest,
+    context: { params: { id: string } }
 ) {
     try {
         await prisma.item.delete({
-            where: { id: params.id },
+            where: { id: context.params.id },
         })
         return new NextResponse(null, { status: 204 })
     } catch {
