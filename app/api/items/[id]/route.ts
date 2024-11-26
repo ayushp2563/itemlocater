@@ -35,7 +35,7 @@ export async function PUT(
             data: { name, location },
         })
         return NextResponse.json(item)
-    } catch (error) {
+    } catch {
         return NextResponse.json(
             { error: 'Failed to update item' },
             { status: 500 }
@@ -52,7 +52,7 @@ export async function DELETE(
             where: { id: params.id },
         })
         return new NextResponse(null, { status: 204 })
-    } catch (error) {
+    } catch {
         return NextResponse.json(
             { error: 'Failed to delete item' },
             { status: 500 }
