@@ -19,14 +19,21 @@
 //     return new NextResponse(null, { status: 204 })
 // }
 
-import { NextRequest, NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
+type RouteContext = {
+    params: {
+        id: string
+    }
+}
+
 export async function PUT(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: RouteContext
 ) {
     try {
         const { name, location } = await request.json()
@@ -45,7 +52,7 @@ export async function PUT(
 
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: RouteContext
 ) {
     try {
         await prisma.item.delete({
