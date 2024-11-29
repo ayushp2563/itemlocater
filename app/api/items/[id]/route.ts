@@ -25,15 +25,13 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 type RouteContext = {
-    params: {
+    params: Promise<{
         id: string
-    }
+    }>
 }
 
-export async function PUT(
-    request: NextRequest,
-    { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     try {
         const { name, location } = await request.json()
         const item = await prisma.item.update({
@@ -49,10 +47,8 @@ export async function PUT(
     }
 }
 
-export async function DELETE(
-    request: NextRequest,
-    { params }: RouteContext
-) {
+export async function DELETE(request: NextRequest, props: RouteContext) {
+    const params = await props.params;
     try {
         await prisma.item.delete({
             where: { id: params.id },
