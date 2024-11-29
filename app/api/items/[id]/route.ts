@@ -19,8 +19,7 @@
 //     return new NextResponse(null, { status: 204 })
 // }
 
-import type { NextRequest } from 'next/server'
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -33,7 +32,7 @@ type RouteContext = {
 
 export async function PUT(
     request: NextRequest,
-    { params }: RouteContext
+    { params }: { params: { id: string } }
 ) {
     try {
         const { name, location } = await request.json()
